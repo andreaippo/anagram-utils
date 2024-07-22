@@ -16,6 +16,19 @@ public class AnagramService {
       return false;
     }
     Map<Character, Integer> frequencyMap = new HashMap<>();
-    return false;
+    char[] sChars = s.input().toCharArray();
+    for (char ch : sChars) {
+      frequencyMap.put(ch, frequencyMap.getOrDefault(ch, 0) + 1);
+    }
+
+    char[] tChars = t.input().toCharArray();
+    for (char ch : tChars) {
+      Integer frequency = frequencyMap.get(ch);
+      if (frequency == null) {
+        return false;
+      }
+      frequencyMap.put(ch, frequency - 1);
+    }
+    return frequencyMap.values().stream().allMatch(value -> value == 0);
   }
 }
