@@ -96,3 +96,4 @@ cause the algorithm to be executed the first time. The remaining times, results 
 
 The data structure backing the history is a simple `HashMap`, which of course comes with limitations both in terms
 of reliability and space, due to the storage in RAM. A fancier implementation could involve some kind of persistence.
+
