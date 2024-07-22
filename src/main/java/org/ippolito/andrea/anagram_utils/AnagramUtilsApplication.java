@@ -10,8 +10,7 @@ import org.springframework.shell.command.annotation.CommandScan;
 @CommandScan
 public class AnagramUtilsApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(AnagramUtilsApplication.class, args);
-  }
-
+    public static void main(String[] args) {
+        SpringApplication.run(AnagramUtilsApplication.class, args);
+    }
 }

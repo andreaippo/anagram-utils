@@ -75,6 +75,19 @@ We assume an input text to be valid if it meets the following conditions:
 A `Text` acts as a wrapper for inputs that are valid according to the aforementioned definition, i.e. no
 `Text`s wrapping invalid inputs can be created.
 
+### Choices
+
+I have opted for a CLI interface although I don't really have much experience with it, but a REST API seemed
+excessive, given the reduced scope of the assignment.
+
+If I had opted for a REST API, I would have defined:
+
+- a `POST` to `/anagram-utils/text`, where `text` is the subject, and the body contains the candidate text. The response
+  body could then return a simple boolean. I would use a `POST` because it better indicates that some state-change might
+  happen on the server side (i.e. the update of the history);
+- a `GET` to `/anagram-utils/text` where `text` is the subject. The response body could then return a list of known
+  anagrams.
+
 Since some state knowledge is requested for implementing the history check, I took advantage of the `HistoryService`
 to use such state knowledge in order to avoid re-executing the two-way check, if possible.
 
