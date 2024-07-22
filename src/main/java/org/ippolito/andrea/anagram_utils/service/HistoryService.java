@@ -1,27 +1,45 @@
 package org.ippolito.andrea.anagram_utils.service;
 
+import org.apache.commons.collections4.SetUtils;
+import org.ippolito.andrea.anagram_utils.service.model.Text;
+import org.springframework.stereotype.Service;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import org.ippolito.andrea.anagram_utils.model.AnagramInput;
-import org.springframework.stereotype.Service;
 
 @Service
 public class HistoryService {
 
-    private final Map<AnagramInput, Set<AnagramInput>> anagrams = new HashMap<>();
+  private final Map<Text, Set<Text>> anagrams = new HashMap<>();
 
-    public void add(AnagramInput s, AnagramInput t) {
-        anagrams.computeIfAbsent(s, k -> new HashSet<>()).add(t);
-        anagrams.computeIfAbsent(t, k -> new HashSet<>()).add(s);
-    }
+  public void add(Text subject, Text newMatch) {
+    Set<Text> knownAnagramsSubject = getKnownAnagrams(subject);
+    Set<Text> knownAnagramsNewMatch = getKnownAnagrams(newMatch);
+    Set<Text> subjectChain = SetUtils.union(Set.of(subject), knownAnagramsSubject);
+    Set<Text> newMatchChain = SetUtils.union(Set.of(newMatch), knownAnagramsNewMatch);
 
-    public boolean areKnownAnagrams(AnagramInput s, AnagramInput t) {
-        return anagrams.computeIfAbsent(s, k -> new HashSet<>()).contains(t);
-    }
+    // update the subject with the new match and its known anagrams
+    anagrams.computeIfAbsent(subject, k -> new HashSet<>()).addAll(newMatchChain);
+    // update the new match with subject and its known anagrams
+    anagrams.computeIfAbsent(newMatch, k -> new HashSet<>()).addAll(subjectChain);
 
-    public Set<AnagramInput> getKnownAnagrams(AnagramInput s) {
-        return anagrams.get(s);
-    }
+    // update each of the known anagrams for the subject with the new match and its known anagrams
+    knownAnagramsSubject.forEach(
+      knownAnagramSubject -> anagrams.computeIfAbsent(knownAnagramSubject, k -> new HashSet<>()).addAll(newMatchChain));
+    // update each of the known anagrams for the new match with the subject and its known anagrams
+    knownAnagramsNewMatch.forEach(
+      knownAnagramNewMatch -> anagrams.computeIfAbsent(knownAnagramNewMatch, k -> new HashSet<>())
+        .addAll(subjectChain));
+  }
+
+  public boolean areKnownAnagrams(Text s, Text t) {
+    return anagrams.computeIfAbsent(s, k -> new HashSet<>()).contains(t);
+  }
+
+  public Set<Text> getKnownAnagrams(Text s) {
+    return Optional.ofNullable(anagrams.get(s)).map(HashSet::new).orElse(new HashSet<>());
+  }
 }

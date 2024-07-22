@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: anagram-utils
+  shell:
+    interactive:
+      enabled: true
+logging:
+  level.org.ippolito.andrea.anagram_utils: ERROR
+---
+spring:
+  config:
+    activate:
+      on-profile: "integration-tests"
+  shell:
+    interactive:
+      #      Prevents the integration test from hanging because of the interactive shell prompt when the app starts
+      enabled: false
+logging:
+  level.org.ippolito.andrea.anagram_utils: DEBUG
+---
