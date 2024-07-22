@@ -44,6 +44,14 @@ class AnagramServiceTest {
     }
 
     @Test
+    void testTwoWayCheck_WhenInputsAreAnagramsButDifferentWordCount_ThenExpectTrue() {
+        Text seemsNiceGuy = new Text("Tom Marvolo Riddle");
+        // please only whisper his name :)
+        Text worstVillainEver = new Text("I am Lord Voldemort");
+        assertTrue(anagramService.twoWayCheck(seemsNiceGuy, worstVillainEver));
+    }
+
+    @Test
     void testTwoWayCheck_WhenInputsAreNotAnagrams_ThenExpectFalseAndDontSaveResult() {
         assertFalse(anagramService.twoWayCheck(MATE, LONELY));
         verify(historyService).areKnownAnagrams(MATE, LONELY);
@@ -61,13 +69,13 @@ class AnagramServiceTest {
     @Test
     void testHistoryCheck_WhenNoMatchInHistory_ThenReturnEmpty() {
         when(historyService.getKnownAnagrams(MATE)).thenReturn(Set.of());
-        assertThat(anagramService.historicalCheck(MATE)).isEmpty();
+        assertThat(anagramService.historySearch(MATE)).isEmpty();
     }
 
     @Test
     void testHistoryCheck_WhenMatchesInHistory_ThenReturnMatches() {
         Set<Text> fromHistory = Set.of(TEAM, TAME);
         when(historyService.getKnownAnagrams(MATE)).thenReturn(fromHistory);
-        assertEquals(fromHistory, anagramService.historicalCheck(MATE));
+        assertEquals(fromHistory, anagramService.historySearch(MATE));
     }
 }

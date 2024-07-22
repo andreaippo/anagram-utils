@@ -29,7 +29,7 @@ public class AnagramCommand {
     public String history(String input) {
         Text ai = new Text(input);
         return "List of known anagrams %s"
-                .formatted(anagramService.historicalCheck(ai).stream()
+                .formatted(anagramService.historySearch(ai).stream()
                         .map(Text::input)
                         .collect(Collectors.toSet()));
     }

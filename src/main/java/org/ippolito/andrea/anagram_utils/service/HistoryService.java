@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class HistoryService {
 
-    private final Map<Text, Set<Text>> anagrams = new HashMap<>();
+    private final Map<Text, Set<Text>> history = new HashMap<>();
 
     public void add(Text subject, Text newMatch) {
         Set<Text> knownAnagramsSubject = getKnownAnagrams(subject);
@@ -21,25 +21,25 @@ public class HistoryService {
         Set<Text> newMatchChain = SetUtils.union(Set.of(newMatch), knownAnagramsNewMatch);
 
         // update the subject with the new match and its known anagrams
-        anagrams.computeIfAbsent(subject, k -> new HashSet<>()).addAll(newMatchChain);
+        history.computeIfAbsent(subject, k -> new HashSet<>()).addAll(newMatchChain);
         // update the new match with subject and its known anagrams
-        anagrams.computeIfAbsent(newMatch, k -> new HashSet<>()).addAll(subjectChain);
+        history.computeIfAbsent(newMatch, k -> new HashSet<>()).addAll(subjectChain);
 
         // update each of the known anagrams for the subject with the new match and its known anagrams
         knownAnagramsSubject.forEach(
-                knownAnagramSubject -> anagrams.computeIfAbsent(knownAnagramSubject, k -> new HashSet<>())
+                knownAnagramSubject -> history.computeIfAbsent(knownAnagramSubject, k -> new HashSet<>())
                         .addAll(newMatchChain));
         // update each of the known anagrams for the new match with the subject and its known anagrams
         knownAnagramsNewMatch.forEach(
-                knownAnagramNewMatch -> anagrams.computeIfAbsent(knownAnagramNewMatch, k -> new HashSet<>())
+                knownAnagramNewMatch -> history.computeIfAbsent(knownAnagramNewMatch, k -> new HashSet<>())
                         .addAll(subjectChain));
     }
 
     public boolean areKnownAnagrams(Text s, Text t) {
-        return anagrams.computeIfAbsent(s, k -> new HashSet<>()).contains(t);
+        return history.computeIfAbsent(s, k -> new HashSet<>()).contains(t);
     }
 
     public Set<Text> getKnownAnagrams(Text s) {
-        return Optional.ofNullable(anagrams.get(s)).map(HashSet::new).orElse(new HashSet<>());
+        return Optional.ofNullable(history.get(s)).map(HashSet::new).orElse(new HashSet<>());
     }
 }

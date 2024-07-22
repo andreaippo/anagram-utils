@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.ippolito.andrea.anagram_utils.service.model.Text;
 import org.springframework.stereotype.Service;
 
@@ -33,21 +34,25 @@ public class AnagramService {
         return areAnagrams;
     }
 
-    public Set<Text> historicalCheck(Text s) {
+    public Set<Text> historySearch(Text s) {
         return historyService.getKnownAnagrams(s);
     }
 
     private static boolean computeTwoWayCheck(Text s, Text t) {
-        if (s.input().length() != t.input().length()) {
+        // make comparison lenient with respect to spaces
+        String sWithoutSpaces = StringUtils.deleteWhitespace(s.input());
+        String tWithoutSpaces = StringUtils.deleteWhitespace(t.input());
+
+        if (sWithoutSpaces.length() != tWithoutSpaces.length()) {
             return false;
         }
         Map<Character, Integer> frequencyMap = new HashMap<>();
-        char[] sChars = s.input().toCharArray();
+        char[] sChars = sWithoutSpaces.toCharArray();
         for (char ch : sChars) {
             frequencyMap.put(ch, frequencyMap.getOrDefault(ch, 0) + 1);
         }
 
-        char[] tChars = t.input().toCharArray();
+        char[] tChars = tWithoutSpaces.toCharArray();
         for (char ch : tChars) {
             Integer frequency = frequencyMap.get(ch);
             if (frequency == null) {

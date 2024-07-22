@@ -63,6 +63,40 @@ Execute from the project's root directory:
 
 `docker build -f Dockerfile -t anagram-utils && docker run -it anagram-utils`
 
+## Usage
+
+Once the app is running, you are greeted with a shell prompt:
+
+`shell:>`
+
+Type `help` to see a list of available commands, or one of `check` or `history`.
+
+Examples (with their outputs):
+
+```shell
+shell:>check team MATE
+Texts are anagrams: yes
+
+shell:>check team meat
+Texts are anagrams: yes
+
+shell:>history meat
+List of known anagrams [mate, team]
+```
+
+Multi-word (use single quotes `'` to surround inputs):
+
+```shell
+shell:>check 'President Obama' 'a baptism redone'
+Texts are anagrams: yes
+
+shell:>history 'President Obama'
+List of known anagrams [a baptism redone]
+
+shell:>check --first 'President Obama' --second 'a baptism redone'
+Texts are anagrams: yes
+```
+
 ## Observations
 
 We assume an input text to be valid if it meets the following conditions:
@@ -73,7 +107,13 @@ We assume an input text to be valid if it meets the following conditions:
   by [Apache's commons-lang library](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/StringUtils.html#isAlphaSpace(java.lang.CharSequence\))
 
 A `Text` acts as a wrapper for inputs that are valid according to the aforementioned definition, i.e. no
-`Text`s wrapping invalid inputs can be created.
+`Text`s wrapping invalid inputs can be created. Inputs are also lower-cased upon creation of the corresponding `Text`.
+
+The two-way check was implemented in a whitespace-independent way. This gives some flexibility to recognize two
+`Text`s as anagrams when their letters match, even though the word count is different (therefore overall length and
+whitespace count differs).
+
+Because of this, `President Obama` and `a baptism redone` will be accepted as anagrams.
 
 ### Choices
 
@@ -96,4 +136,3 @@ cause the algorithm to be executed the first time. The remaining times, results 
 
 The data structure backing the history is a simple `HashMap`, which of course comes with limitations both in terms
 of reliability and space, due to the storage in RAM. A fancier implementation could involve some kind of persistence.
-
