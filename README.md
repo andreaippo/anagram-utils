@@ -84,16 +84,19 @@ shell:>history meat
 List of known anagrams [mate, team]
 ```
 
-Multi-word (use single quotes `'` to surround inputs):
+Multi-word (use quotes `"` to surround inputs):
 
 ```shell
-shell:>check 'President Obama' 'a baptism redone'
+shell:>check "President Obama" "a baptism redone"
 Texts are anagrams: yes
 
-shell:>history 'President Obama'
+shell:>history "President Obama"
 List of known anagrams [a baptism redone]
 
-shell:>check --first 'President Obama' --second 'a baptism redone'
+shell:>check "McDonald's restaurants" "Uncle Sam's standard rot"
+Texts are anagrams: yes
+
+shell:>check --first "President Obama" --second "a baptism redone"
 Texts are anagrams: yes
 ```
 
@@ -104,7 +107,8 @@ We assume an input text to be valid if it meets the following conditions:
 - it is not empty
 - it does not exceed `MAX_LENGTH`
 - it only contains `alpha` and space characters, as defined
-  by [Apache's commons-lang library](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/StringUtils.html#isAlphaSpace(java.lang.CharSequence\))
+  by [Apache's commons-lang library](https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/StringUtils.html#isAlphaSpace(java.lang.CharSequence\)),
+  plus punctuation characters
 
 A `Text` acts as a wrapper for inputs that are valid according to the aforementioned definition, i.e. no
 `Text`s wrapping invalid inputs can be created. Inputs are also lower-cased upon creation of the corresponding `Text`.
@@ -113,7 +117,10 @@ The two-way check was implemented in a whitespace-independent way. This gives so
 `Text`s as anagrams when their letters match, even though the word count is different (therefore overall length and
 whitespace count differs).
 
-Because of this, `President Obama` and `a baptism redone` will be accepted as anagrams.
+The same applies to punctuation characters.
+
+Because of this, `She Sells Sanctuary` and `Santa; shy, less cruel` will be accepted as anagrams, although they
+differ in word/spaces count and punctuation.
 
 ### Choices
 
@@ -130,9 +137,6 @@ If I had opted for a REST API, I would have defined:
 
 Since some state knowledge is requested for implementing the history check, I took advantage of the `HistoryService`
 to use such state knowledge in order to avoid re-executing the two-way check, if possible.
-
-For example, requesting a computation-intensive two-way check on the same inputs twice (or more) in a row, will only
-cause the algorithm to be executed the first time. The remaining times, results will be fetched from history.
 
 The data structure backing the history is a simple `HashMap`, which of course comes with limitations both in terms
 of reliability and space, due to the storage in RAM. A fancier implementation could involve some kind of persistence.

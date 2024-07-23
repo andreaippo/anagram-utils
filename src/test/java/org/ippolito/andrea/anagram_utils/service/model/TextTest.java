@@ -36,15 +36,15 @@ class TextTest {
     }
 
     @Test
-    void whenInputLettersOrSpace_ThenNoException() {
-        String input = RandomStringUtils.randomAlphabetic(10) + StringUtils.SPACE + "ә";
+    void whenInputLettersOrSpaceOrPunctuation_ThenNoException() {
+        String input = RandomStringUtils.randomAlphabetic(10) + StringUtils.SPACE + "ә" + ".'!-";
         Text text = new Text(input);
         assertEquals(input.toLowerCase(), text.input());
     }
 
     @Test
     void whenInputContainsInvalidCharacters_ThenThrowException() {
-        String input = RandomStringUtils.randomAlphanumeric(10) + ".";
+        String input = RandomStringUtils.randomNumeric(10);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new Text(input));
         assertThat(exception.getMessage()).isEqualTo(TEXT_CONTAINS_INVALID_CHARS_MSG);
     }

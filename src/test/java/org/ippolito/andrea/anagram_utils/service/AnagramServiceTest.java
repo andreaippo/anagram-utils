@@ -67,6 +67,24 @@ class AnagramServiceTest {
     }
 
     @Test
+    void testTwoWayCheck_WhenInputsOnlyDifferInPunctuationAndSpaces_ThenExpectTrue() {
+        // https://en.wikipedia.org/wiki/Anagram#Examples
+        Text case1Text1 = new Text("Church of Scientology");
+        Text case1Text2 = new Text("rich-chosen goofy cult");
+        assertTrue(anagramService.twoWayCheck(case1Text1, case1Text2));
+
+        Text case2Text1 = new Text("McDonald's restaurants");
+        Text case2Text2 = new Text("Uncle Sam's standard rot");
+        assertTrue(anagramService.twoWayCheck(case2Text1, case2Text2));
+
+        Text case3Text1 = new Text("She Sells Sanctuary");
+        Text case3Text2 = new Text("Santa; shy, less cruel");
+        Text case3Text3 = new Text("Satan; cruel, less shy");
+        assertTrue(anagramService.twoWayCheck(case3Text1, case3Text2));
+        assertTrue(anagramService.twoWayCheck(case3Text1, case3Text3));
+    }
+
+    @Test
     void testHistoryCheck_WhenNoMatchInHistory_ThenReturnEmpty() {
         when(historyService.getKnownAnagrams(MATE)).thenReturn(Set.of());
         assertThat(anagramService.historySearch(MATE)).isEmpty();

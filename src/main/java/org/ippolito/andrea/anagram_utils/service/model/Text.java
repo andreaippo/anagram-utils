@@ -1,5 +1,7 @@
 package org.ippolito.andrea.anagram_utils.service.model;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 import org.apache.commons.lang3.StringUtils;
 
 public record Text(String input) {
@@ -19,7 +21,7 @@ public record Text(String input) {
         if (StringUtils.length(input) > MAX_LENGTH) {
             throw new IllegalArgumentException(TEXT_TOO_LONG_MSG);
         }
-        if (!StringUtils.isAlphaSpace(input)) {
+        if (!StringUtils.isAlphaSpace(input.replaceAll("\\p{Punct}", EMPTY))) {
             throw new IllegalArgumentException(TEXT_CONTAINS_INVALID_CHARS_MSG);
         }
         input = StringUtils.lowerCase(input);
