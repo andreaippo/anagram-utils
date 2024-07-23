@@ -117,7 +117,7 @@ Because of this, `President Obama` and `a baptism redone` will be accepted as an
 
 ### Choices
 
-I have opted for a CLI interface although I don't really have much experience with it, but a REST API seemed
+I have opted for a CLI interface, although I don't really have much experience with it, but a REST API seemed
 excessive, given the reduced scope of the assignment.
 
 If I had opted for a REST API, I would have defined:
@@ -136,3 +136,7 @@ cause the algorithm to be executed the first time. The remaining times, results 
 
 The data structure backing the history is a simple `HashMap`, which of course comes with limitations both in terms
 of reliability and space, due to the storage in RAM. A fancier implementation could involve some kind of persistence.
+
+## Code formatting
+
+The code is formatted via [`spotless`](https://github.com/diffplug/spotless) according to the [`palantir`](https://github.com/diffplug/spotless/tree/main/plugin-maven#palantir-java-format) formatting rules.
