@@ -61,7 +61,7 @@ Pre-requisites:
 
 Execute from the project's root directory:
 
-`docker build -f Dockerfile -t anagram-utils && docker run -it anagram-utils`
+`docker build . -t anagram-utils && docker run -it anagram-utils`
 
 ## Usage
 
